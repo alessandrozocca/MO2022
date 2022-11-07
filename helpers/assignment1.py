@@ -115,7 +115,7 @@ def plot_solution(coords, model):
     ax[1].set_ylabel("load (x10^3 kg)")
     
     # Add solution scores as plot titles
-    ax[0].set_title("Total travel time: %d" % model.total_travel_time())
-    ax[1].set_title("Total fuel consumption: %d" % model.total_fuel_consumption())
+    ax[0].set_title("Optimal Route")
+    ax[1].set_title("Total vehicl load over time")
 
     plt.show()
