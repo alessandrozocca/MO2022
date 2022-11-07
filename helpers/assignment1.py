@@ -116,6 +116,6 @@ def plot_solution(coords, model):
     
     # Add solution scores as plot titles
     ax[0].set_title("Optimal Route")
-    ax[1].set_title("Total vehicl load over time")
+    ax[1].set_title("Total vehicle load over time")
 
     plt.show()
