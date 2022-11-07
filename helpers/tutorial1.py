@@ -1,6 +1,6 @@
 from math import cos, sin, pi
 from networkx import Graph, DiGraph, layout, draw, draw_networkx_labels as draw_labels,  draw_networkx_edge_labels as draw_edge_labels
-
+from IPython.display import HTML
 
 def draw_graph(graph, ax=None, node_labels=None):
     n = len(graph["nodes"])
