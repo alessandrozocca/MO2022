@@ -2,6 +2,7 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from time import perf_counter
 
 
 def generate_instance(n_nodes, seed):
@@ -64,6 +65,17 @@ def generate_instance(n_nodes, seed):
         "x_coords": dict(zip(nodes, x_coords)),
         "y_coords": dict(zip(nodes, y_coords)),
     })
+    
+
+def solve_model(solver, model):
+    start_time = perf_counter()
+    result = solver.solve(model)
+    solver_time = perf_counter() - start_time
+    if result.solver.status != pyo.SolverStatus.ok or \
+       result.solver.termination_condition != pyo.TerminationCondition.optimal:
+        raise RuntimeError("Solver failed in %.2fs with status '%s' and termination condition '%s'" % 
+                           (solver_time, result.solver.status, result.solver.termination_condition))
+    print("Optimal solution found in %.2fs" % solver_time)
     
     
 def plot_solution(coords, model):
