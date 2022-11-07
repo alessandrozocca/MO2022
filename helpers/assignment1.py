@@ -60,10 +60,9 @@ def generate_instance(n_nodes, seed):
     nodes = np.arange(n_nodes) + 1
 
     return pd.DataFrame({
-        "demands":  dict(zip(nodes, demands)),
-        "earliest_arrivals": dict(zip(nodes, earliest_arrivals)),
-        "x_coords": dict(zip(nodes, x_coords)),
-        "y_coords": dict(zip(nodes, y_coords)),
+        "demand":  dict(zip(nodes, demands)),
+        "earliest_arrival": dict(zip(nodes, earliest_arrivals)),
+        "coord": dict(zip(nodes, zip(x_coords, y_coords)))
     })
     
 
