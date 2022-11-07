@@ -6,7 +6,7 @@ from time import perf_counter
 
 
 def generate_instance(n_nodes, seed):
-    """ Generate a random instance of size [n_nodes] with seed [seed] """
+    """ Generate a random instance of size [n_nodes] with a fixed [seed] """
     rng = np.random.default_rng(seed)
 
     # Hardcoded instance parameters
@@ -68,6 +68,7 @@ def generate_instance(n_nodes, seed):
     
 
 def solve_model(solver, model):
+    """ Use a [solver] from Pyomo's solver factory to solve a Pyomo [model] and validate an optimal solution is found """
     start_time = perf_counter()
     result = solver.solve(model)
     solver_time = perf_counter() - start_time
