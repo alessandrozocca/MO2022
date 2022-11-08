@@ -95,7 +95,7 @@ def plot_solution(coords, model):
     t = {i for i, d in G.out_degree if d == 0}
 
     # Find the routes of visited nodes between s and t
-    routes = [nx.shortest_path(G, i, j) for j in t for i in s if nx.has_path(G, i, j)]
+    routes = [nx.shortest_path(G, i, j) for j in t for i in s if nx.has_path(G, i, j)] + list(nx.simple_cycles(G))
 
     # Create plot
     fig, ax = plt.subplots(1, len(routes)+1, figsize=(24, 6))
