@@ -6,7 +6,7 @@ import pyomo.environ as pyo
 from time import perf_counter
 
 
-def generate_instance(n_nodes, seed):
+def generate_instance(n_nodes, seed, n_vehicles=1):
     """ Generate a random instance of size [n_nodes] with a fixed [seed] """
     rng = np.random.default_rng(seed)
 
@@ -29,6 +29,9 @@ def generate_instance(n_nodes, seed):
     demand_left = np.sum(demands)
     demands = np.append(max(-demand_left, 0), demands)
     demands = np.append(demands, min(-demand_left, 0))
+    
+    # Correct demands for multiple vehicle cases
+    demands -= max(demands[:n_vehicles].min(), 0)
 
     # Assign each node to a cluster
     n_clusters = rng.integers(1, n_nodes // MIN_AVG_CLUSTER_SIZE + 1)
@@ -87,14 +90,17 @@ def plot_solution(coords, model):
 
     # Load matrix as networkx DiGraph
     G = nx.from_pandas_adjacency(pd.DataFrame(adjacency).T, create_using=nx.DiGraph)
-    
-    # Find the route of visited nodes between s and t
-    route = nx.shortest_path(G, 1, model.n_nodes)
+
+    s = {i for i, d in G.in_degree if d == 0}
+    t = {i for i, d in G.out_degree if d == 0}
+
+    # Find the routes of visited nodes between s and t
+    routes = [nx.shortest_path(G, i, j) for j in t for i in s if nx.has_path(G, i, j)]
 
     # Create plot
-    fig, ax = plt.subplots(1, 2, figsize=(24, 6))
+    fig, ax = plt.subplots(1, len(routes)+1, figsize=(24, 6))
 
-    node_colors = ["green"] + ["blue"] * (coords.size - 2) + ["red"]
+    node_colors = ["green"] * len(s) + ["blue"] * (coords.size - len(s) - len(t)) + ["red"] * len(t)
 
     # Plot instance and routes on a coordinate grid
     edge_labels = {(i, j): int(model.node_load[i]()) for i in model.nodes for j in model.nodes if model.arc[i, j]() == 1}
@@ -102,20 +108,20 @@ def plot_solution(coords, model):
     nx.draw_networkx(G, ax=ax[0], pos=coords, nodelist=model.nodes, font_size=11, font_color="white", node_color=node_colors, alpha=0.75)
     nx.draw_networkx_edge_labels(G, ax=ax[0], pos=coords, edge_labels=edge_labels)
 
-    # Plot the vehicle load during the route over time
-    arrival_times = pd.Series([model.node_arrival[i]() for i in route], index=route)
-    node_loads = pd.Series([model.node_load[i]() for i in route], index=route)
+    # Add plot title
+    ax[0].set_title("Optimal Route" + ("s" if len(routes) > 0 else ""))
 
-    ax[1].step(arrival_times, node_loads, where="post", lw=1, c="black")
-    ax[1].scatter(arrival_times, node_loads, s=300, c=node_colors[:len(route)], alpha=0.75)
-    for i in route:
-        ax[1].annotate(i, (arrival_times[i], node_loads[i]), fontsize=11, color="white", ha="center", va="center")
+    # Plot the vehicle load during the routes over time
+    for r, route in enumerate(routes, 1):
+        arrival_times = pd.Series([model.node_arrival[i]() for i in route], index=route)
+        node_loads = pd.Series([model.node_load[i]() for i in route], index=route)
 
-    ax[1].set_xlabel("time (minutes)")
-    ax[1].set_ylabel("load (x10^3 kg)")
-    
-    # Add solution scores as plot titles
-    ax[0].set_title("Optimal Route")
-    ax[1].set_title("Total vehicle load over time")
+        ax[r].step(arrival_times, node_loads, where="post", lw=1, c="black")
 
-    plt.show()
+        # Add nodes and labels
+        ax[r].scatter(arrival_times, node_loads, s=300, c=[node_colors[x-1] for x in route], alpha=0.75)
+        for i in route:
+            ax[r].annotate(i, (arrival_times[i], node_loads[i]), fontsize=11, color="white", ha="center", va="center")
+
+        # Add axis labels and title
+        ax[r].set(xlabel="time (minutes)", ylabel="load (x10^3 kg)", title="Total vehicle load over time")
