@@ -20,7 +20,7 @@ def generate_instance(n_nodes, seed, n_vehicles=1):
 
     # Draw time window opening times exponentially
     arrival_times = rng.exponential(ARRIVALS_SCALE, n_nodes - n_vehicles)
-    earliest_arrivals = np.concatenate(np.zeros(n_vehicles), arrival_times).astype(int)
+    earliest_arrivals = np.append(np.zeros(n_vehicles), arrival_times).astype(int)
     
     # Draw demands uniformly
     demands = rng.integers(DEMAND_MIN, DEMAND_MAX, n_nodes - 2)
@@ -32,7 +32,7 @@ def generate_instance(n_nodes, seed, n_vehicles=1):
     
     # Correct demands for multiple vehicle cases
     demands -= min(demands[:n_vehicles].min(), 0)
-    demands += 2*(n_vehicles > 1)
+    demands += 2 * (n_vehicles > 1)
 
     # Assign each node to a cluster
     n_clusters = rng.integers(1, n_nodes // MIN_AVG_CLUSTER_SIZE + 1)
