@@ -125,3 +125,5 @@ def plot_solution(coords, model):
 
         # Add axis labels and title
         ax[r].set(xlabel="time (minutes)", ylabel="load (x10^3 kg)", title="Total vehicle load over time")
+
+    plt.show()
