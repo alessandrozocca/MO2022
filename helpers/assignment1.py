@@ -31,7 +31,7 @@ def generate_instance(n_nodes, seed, n_vehicles=1):
     demands = np.append(demands, min(-demand_left, 0))
     
     # Correct demands for multiple vehicle cases
-    demands -= max(demands[:n_vehicles].min(), 0)
+    demands -= min(demands[:n_vehicles].min(), 0)
 
     # Assign each node to a cluster
     n_clusters = rng.integers(1, n_nodes // MIN_AVG_CLUSTER_SIZE + 1)
