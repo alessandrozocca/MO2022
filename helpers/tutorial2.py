@@ -1,8 +1,5 @@
-from IPython.display import HTML
-import numpy as np
 import sympy as sp
-
-sp.var("x1 x2 x y t")
+import numpy as np
 
 def plot_feasible_region(constraints, x_axis=None, y_axis=None, origin=(0,0), **kwargs):
     return sp.plot_implicit(sp.And(*constraints), x_axis, y_axis, axis_center=origin, line_color="lightblue", **kwargs)
@@ -32,3 +29,15 @@ def plot_objective(feasible_region_plot, objective_function, objective_values=No
     feasible_region_plot.extend(objective_plots)
     if show:
         feasible_region_plot.show()
+        
+def generateinstance(m, n, seed):
+    
+    rng = np.random.default_rng(seed)
+    A = rng.random([m,n])
+    while np.linalg.det(np.dot(A.T, A)) == 0:
+        A = rng.random([m,n])
+    b = rng.random(m)
+    l = - abs(5*rng.random(n))
+    u = abs(5*rng.random(n))
+    
+    return A, b, l, u
