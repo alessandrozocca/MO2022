@@ -1,6 +1,8 @@
 import sympy as sp
 import numpy as np
 
+sp.var("y")
+
 def plot_feasible_region(constraints, x_axis=None, y_axis=None, origin=(0,0), **kwargs):
     return sp.plot_implicit(sp.And(*constraints), x_axis, y_axis, axis_center=origin, line_color="lightblue", **kwargs)
 
