@@ -10,7 +10,7 @@ def sample_wind_vector(seed):
     rng = np.random.default_rng(seed)
 
     angle = np.pi * np.random.uniform(0, 0.5)
-    wind_direction = np.array(np.cos(angle), np.sin(angle))
+    wind_direction = np.array([np.cos(angle), np.sin(angle)])
     wind_speed = rng.integers(5, 25)
 
     return wind_direction * wind_speed
@@ -38,19 +38,15 @@ def compute_interferences(coords, wind_vector):
     return interferences
 
 
-def generate_instance(x, y, seed, **kwargs):
+def generate_instance(x, y, **kwargs):
     """
     Generates a random instance of grid size (x, y) with a fixed seed.
     """
-    rng = np.random.default_rng(seed)
-
     coords = np.array(list(product(range(x), range(y))))
-    interferences = compute_interferences(coords, sample_wind_vector(rng))
 
     data = {
         "n_sites": x * y,
         "coords": coords,
-        "inteferences": interferences,
         "production": 150,
         "min_distance": kwargs.get("min_distance", 2),
         "min_turbines": kwargs.get("min_turbines", 5),
