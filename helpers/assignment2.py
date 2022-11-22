@@ -10,7 +10,7 @@ def sample_wind_vector(seed):
     rng = np.random.default_rng(seed)
 
     angle = np.pi * np.random.uniform(0, 0.5)
-    wind_direction = np.cos(angle), np.sin(angle)
+    wind_direction = np.array(np.cos(angle), np.sin(angle))
     wind_speed = rng.integers(5, 25)
 
     return wind_direction * wind_speed
