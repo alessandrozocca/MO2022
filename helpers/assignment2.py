@@ -106,7 +106,7 @@ def read_economic_dispatch_data():
     )[["node_id", "d", "p_min", "p_max", "c_var"]]
 
     wind_production_samples_df = pd.read_csv(
-        "https://gist.githubusercontent.com/leonlan/8145e4477dabe97705c60aa4d55363f5/raw/7816951386b4cdd2b624b0c4a34a6c8b66bc1dc8/wind_production_samples.csv"
+        "https://gist.githubusercontent.com/leonlan/8145e4477dabe97705c60aa4d55363f5/raw/7816951386b4cdd2b624b0c4a34a6c8b66bc1dc8/discrete_wind.csv"
     ).T
 
     # Read data
