@@ -1,5 +1,6 @@
 from itertools import product
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -112,3 +113,23 @@ def read_economic_dispatch_data():
     wind_production_samples = [sum(d.values()) for d in wind_production_samples]
 
     return nodes, wind_production_samples
+
+
+def plot_wind_farm(instance, solution, **kwargs):
+    coords = instance["coords"]
+    min_distance = instance["min_distance"]
+
+    _, ax = plt.subplots(figsize=[10, 10])
+
+    ax.scatter(coords[:, 0], coords[:, 1], s=10, label="site")
+
+    turbine_coords = coords[solution]
+    ax.scatter(*turbine_coords.T, s=30, label="turbine")
+
+    for (x, y) in turbine_coords:
+        cir = plt.Circle((x, y), min_distance / 2, color="r", fill=False)
+        ax.add_patch(cir)
+
+    ax.set_aspect("equal", adjustable="datalim")
+    ax.set_title(f"Wind farm layout\nSolution {solution}")
+    ax.legend()
