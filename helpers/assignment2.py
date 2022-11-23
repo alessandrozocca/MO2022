@@ -73,17 +73,17 @@ def read_elastic_net_data():
     return X, y
 
 
-def generate_wind_farm_data():
+def generate_wind_farm_data(n_samples=45, x=6, y=6):
     """
     Computes all data needed for the wind farm part of the assignment.
     """
-    grid_x = 10
-    grid_y = 10
+    grid_x = x
+    grid_y = y
 
     n_locations = grid_x * grid_y
     instance = generate_instance(grid_x, grid_y)
 
-    samples = 50
+    samples = n_samples
     wind_vectors = np.zeros((samples, 2))
     interference_matrices = np.zeros((samples, n_locations, n_locations))
 
@@ -93,10 +93,7 @@ def generate_wind_farm_data():
             instance["coords"], wind_vectors[i]
         )
 
-    wind_average = np.average(wind_vectors, axis=0)
-    interference_average = compute_interferences(instance["coords"], wind_average)
-
-    return instance, wind_average, interference_average, interference_matrices
+    return instance, interference_matrices
 
 
 def read_economic_dispatch_data():
