@@ -17,8 +17,8 @@ def get_network(query):
 def make_instance(graph, q=0.75):
     """ Create a single shortest path routing instance from a given graph.
         Returns source s, target t, a list of nodes, and a dictionary of edges and their distances. """
-    nodes = list(g.nodes)
-    edges = nx.get_edge_attributes(nx.DiGraph(g), "length")
+    nodes = list(graph.nodes)
+    edges = nx.get_edge_attributes(nx.DiGraph(graph), "length")
     
     distance_matrix = nx.floyd_warshall_numpy(graph, weight="length")
     quantile = np.quantile(distance_matrix, q)
