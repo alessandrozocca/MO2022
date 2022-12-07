@@ -6,9 +6,6 @@ from itertools import cycle
 from matplotlib.colors import TABLEAU_COLORS
 
 
-cmap = cycle(TABLEAU_COLORS.keys())
-
-
 def get_network(center, radius):
     """ Get a networkx MultiDiGraph object representing the area specified in the query. """
     return osmnx.graph.graph_from_address(center, radius, network_type='walk', simplify=True)
@@ -28,6 +25,8 @@ def make_instance(graph):
     
 def plot_network(graph, *routes):
     """ Plot a network instance, optionally including one or more routes. """
+    cmap = cycle(TABLEAU_COLORS.keys())
+    
     if len(routes) == 0:
         osmnx.plot_graph(graph)
     elif len(routes) == 1:
