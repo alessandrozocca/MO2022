@@ -1,3 +1,4 @@
+import math
 import osmnx
 import numpy as np
 import networkx as nx
@@ -22,15 +23,33 @@ def make_instance(graph):
 
     return nodes, edges, pred, succ
     
+ 
+def get_distances_to(graph, node):
+    return nx.single_source_dijkstra_path_length(graph, node, weight="length")
+ 
+ 
+def get_crowdedness_coefficents(graph):
+    c = 5395065019
+    delta = get_distances_to(graph, c)
+    return {k: 2*math.exp(-v/250) if k != c else 2 for k, v in delta.items()}
+ 
     
 def plot_network(graph, *routes):
-    """ Plot a network instance, optionally including one or more routes. """
-    cmap = cycle(TABLEAU_COLORS.keys())
-    
+    """ Plot a network instance, optionally including one or more routes. """    
     if len(routes) == 0:
         osmnx.plot_graph(graph)
     elif len(routes) == 1:
         osmnx.plot_graph_route(graph, routes[0])
     else:
+        cmap = cycle(TABLEAU_COLORS.keys())
         colors = [c for _, c in zip(routes, cmap)]
         osmnx.plot_graph_routes(graph, routes, colors)
+
+
+def plot_network_heatmap(graph, route=None, node_color=None, edge_color=None, route_color=None):
+    """ Plot a network instance, optionally including one or more routes. """
+    if route is None:
+        osmnx.plot_graph(graph, node_color=node_color, edge_color=edge_color)
+    else:
+        osmnx.plot_graph_route(graph, route, node_color=node_color, edge_color=edge_color, route_color=route_color)
+ 
