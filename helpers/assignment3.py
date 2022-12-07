@@ -29,7 +29,7 @@ def make_instance(graph, q=0.75):
     return s, t, nodes, edges
     
     
- def plot_network(graph, *routes):
+def plot_network(graph, *routes):
     """ Plot a network instance, optionally including one or more routes. """
     if len(routes) == 0:
         osmnx.plot_graph(graph)
@@ -37,4 +37,4 @@ def make_instance(graph, q=0.75):
         osmnx.plot_graph(graph, routes[0])
     else:
         colors = [c for _, c in zip(routes, cmap)]
-        osmnx.plot_graph_routes(g, routes, colors);
+        osmnx.plot_graph_routes(g, routes, colors)
