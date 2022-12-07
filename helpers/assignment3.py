@@ -9,24 +9,18 @@ from matplotlib.colors import TABLEAU_COLORS
 cmap = cycle(TABLEAU_COLORS.keys())
 
 
-def get_network(query):
+def get_network(center, radius):
     """ Get a networkx MultiDiGraph object representing the area specified in the query. """
-    return osmnx.graph.graph_from_place(query, network_type='drive', simplify=True)
+    return osmnx.graph.graph_from_address(center, radius, network_type='walk', simplify=True)
 
     
-def make_instance(graph, q=0.75):
+def make_instance(graph):
     """ Create a single shortest path routing instance from a given graph.
-        Returns source s, target t, a list of nodes, and a dictionary of edges and their distances. """
+        Returns a list of nodes and a dictionary of edges and their distances. """
     nodes = list(graph.nodes)
     edges = nx.get_edge_attributes(nx.DiGraph(graph), "length")
-    
-    distance_matrix = nx.floyd_warshall_numpy(graph, weight="length")
-    quantile = np.quantile(distance_matrix, q)
 
-    s = nodes[np.abs(distance_matrix - quantile).min(1).argmin()]
-    t = nodes[np.abs(distance_matrix - quantile).min(0).argmin()]
-
-    return s, t, nodes, edges
+    return nodes, edges
     
     
 def plot_network(graph, *routes):
